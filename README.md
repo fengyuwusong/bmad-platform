@@ -1,3 +1,5 @@
+**[中文](./README.zh.md) | English**
+
 # BMAD Platform
 
 A web-based platform that brings the [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) AI-driven development workflow to your browser. Guide your projects from idea to scaffold through structured, multi-step conversations with specialized AI agents.

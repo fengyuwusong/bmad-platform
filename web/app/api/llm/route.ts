@@ -6,9 +6,27 @@ export async function POST(request: NextRequest) {
   try {
     const { llmConfig, agent, messages, stream } = await request.json();
 
-    if (!llmConfig || !llmConfig.apiKey) {
+    if (!llmConfig) {
       return NextResponse.json(
-        { error: 'LLM configuration is missing or incomplete' },
+        { error: 'LLM configuration is missing' },
+        { status: 400 }
+      );
+    }
+
+    // When apiKey is empty the client is using the platform default.
+    // Substitute the key from the server-side environment variable so it
+    // is never exposed in the client bundle or network responses.
+    const resolvedConfig = llmConfig.apiKey
+      ? llmConfig
+      : {
+          ...llmConfig,
+          apiKey: process.env.DEFAULT_API_KEY ?? '',
+          model: llmConfig.model || process.env.DEFAULT_MODEL || 'glm-4-flash',
+        };
+
+    if (!resolvedConfig.apiKey) {
+      return NextResponse.json(
+        { error: 'No API key configured. Set DEFAULT_API_KEY in environment variables.' },
         { status: 400 }
       );
     }
@@ -32,7 +50,7 @@ export async function POST(request: NextRequest) {
             try { controller.enqueue(encoder.encode(data)); } catch { /* client disconnected */ }
           };
           try {
-            await callLLM(llmConfig, allMessages, (message: StreamMessage) => {
+            await callLLM(resolvedConfig, allMessages, (message: StreamMessage) => {
               if (signal.aborted) return;
               if (message.type === 'content') {
                 safeEnqueue(`data: ${JSON.stringify({ content: message.content })}\n\n`);
@@ -62,7 +80,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // 非流式响应
-      const result = await callLLM(llmConfig, allMessages);
+      const result = await callLLM(resolvedConfig, allMessages);
       return NextResponse.json(result);
     }
   } catch (error) {

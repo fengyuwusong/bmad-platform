@@ -1,0 +1,11 @@
+# Local Claude config
+.claude/
+.playwright-mcp/
+
+# Screenshots / local assets
+*.png
+*.jpg
+*.gif
+
+# Local notes
+*.local.md

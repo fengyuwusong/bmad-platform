@@ -1,109 +1,116 @@
 # BMAD Platform
 
-> 将 [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) 的专业 AI 敏捷开发流程带到网页端
+将 [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) 的专业 AI 开发流程带到网页端。通过结构化的对话工作流，帮助你完成产品需求分析、技术方案设计和项目脚手架生成。
 
-BMAD Platform 是一个 Web 平台，让非技术用户也能通过可视化界面使用 BMAD 的专业开发流程来构建项目。
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
+![React](https://img.shields.io/badge/React-19-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ## 功能特性
 
-### 当前 MVP (v0.1.0)
+- **三大核心工作流**：产品需求分析 → 技术方案设计 → 项目脚手架生成，覆盖从 0 到 1 的完整开发周期
+- **多 LLM 支持**：内置智谱 AI GLM（无需配置），也支持 OpenAI、Anthropic Claude 及任意兼容接口
+- **流式对话**：实时流式输出，支持手动 / 自动两种驱动模式
+- **产出物提取**：自动识别 AI 回复中的代码块和文档，收集到右侧面板，支持全屏预览和下载
+- **Mermaid 图表**：AI 生成的架构图、流程图直接在对话中渲染
+- **文档导出**：一键导出 Markdown 格式的完整对话记录和所有产出物
+- **主题切换**：支持亮色 / 暗色 / 跟随系统
 
-- 🔑 **LLM Provider 配置** - 支持 OpenAI、Anthropic Claude 和自定义兼容 API
-- 📋 **工作流选择** - 3 个核心开发流程模板
-- 💬 **交互式向导** - 流式响应的对话界面
-- 📥 **文档导出** - 导出 Markdown 格式的对话记录和产出
+## 工作流
 
-### 工作流模板
+### 📋 产品需求分析（~30-45 min）
+由 PM Agent 引导，5 步完成：项目概述 → 用户研究 → 功能定义 → 用户故事 → 生成 PRD 文档
 
-| 模板 | 描述 | 步骤 |
-|------|------|------|
-| 产品需求分析 | 深入理解产品需求，输出 PRD 文档 | 5 步 |
-| 技术方案设计 | 设计技术架构、API 接口和数据模型 | 5 步 |
-| 项目脚手架生成 | 生成基础项目结构和核心代码 | 6 步 |
+### 🏗️ 技术方案设计（~45-60 min）
+由架构师 Agent 引导，5 步完成：需求理解 → 技术选型 → 系统架构 → API 设计 → 生成技术设计文档
+
+### ⚙️ 项目脚手架生成（~30-45 min）
+由开发者 Agent 引导，6 步完成：分析计划 → 项目初始化 → 数据模型 → API 实现 → 前端组件 → 完善导出
 
 ## 快速开始
 
-### 安装依赖
+**环境要求**：Node.js 18.18+
 
 ```bash
-cd web
+git clone https://github.com/fengyuwusong/bmad-platform.git
+cd bmad-platform/web
 npm install
+cp .env.example .env.dev
 ```
 
-### 启动开发服务器
+编辑 `.env.dev`，填入平台默认 LLM 的 API Key：
+
+```env
+DEFAULT_API_KEY=your_api_key_here
+DEFAULT_MODEL=glm-5
+```
 
 ```bash
 npm run dev
+# 访问 http://localhost:3000
 ```
 
-访问 http://localhost:3000
+> **注意**：`DEFAULT_API_KEY` 仅在服务端使用，不会暴露给浏览器。用户也可以在应用内自行配置其他 LLM Provider。
 
-### 构建生产版本
+## LLM 配置
 
-```bash
-npm run build
-npm start
-```
+内置智谱 AI GLM（`glm-5`）作为默认模型，用户无需配置即可使用。点击右上角 ⚙️ 可切换为自己的 Provider：
 
-## 使用指南
+| Provider | 推荐模型 |
+|----------|----------|
+| OpenAI 官方 | `gpt-4o`、`gpt-4o-mini`、`o1-mini` |
+| Anthropic Claude 官方 | `claude-sonnet-4-6`、`claude-opus-4-6` |
+| GLM (智谱AI) | `glm-5`、`glm-4-plus`、`glm-4-air` |
+| 自定义 OpenAI 兼容 | Azure OpenAI、国内第三方 API 等 |
+| 自定义 Anthropic 兼容 | 兼容 Anthropic 格式的第三方服务 |
 
-1. **配置 LLM Provider**
-   - 选择提供商（OpenAI / Anthropic / 自定义）
-   - 输入 API Key
-   - 点击"验证并保存"
+## 部署到 Vercel
 
-2. **选择工作流**
-   - 浏览 3 个可用的工作流模板
-   - 查看每个工作流的步骤和预计时间
-   - 选择一个并点击"开始工作流"
+1. Fork 此仓库
+2. 在 [Vercel](https://vercel.com) 导入项目，**Root Directory 设为 `web`**
+3. 添加环境变量：
 
-3. **执行流程**
-   - 与 AI Agent 进行对话
-   - 回答问题，提供需求细节
-   - 查看实时生成的建议
-   - 完成后可进入下一步或导出文档
+   | 变量名 | 说明 |
+   |--------|------|
+   | `DEFAULT_API_KEY` | 平台默认 LLM 的 API Key |
+   | `DEFAULT_MODEL` | 默认模型名称，如 `glm-5` |
 
-4. **导出结果**
-   - 点击"导出文档"按钮
-   - 下载 Markdown 格式的完整对话记录
+4. 部署
 
 ## 项目结构
 
 ```
 web/
-├── app/              # Next.js App Router
-│   ├── page.tsx      # 主页面
-│   ├── layout.tsx    # 根布局
-│   └── globals.css   # 全局样式
-├── api/              # API 路由
-│   ├── llm/          # LLM 调用接口
-│   └── validate/     # 配置验证接口
-├── components/       # React 组件
-│   ├── LLMConfigForm.tsx
-│   ├── WorkflowSelector.tsx
-│   └── WorkflowRunner.tsx
-├── lib/              # 核心逻辑
-│   ├── store.ts      # Zustand 状态管理
-│   ├── llm.ts        # LLM 服务层
-│   ├── workflows.ts  # 工作流定义
-│   └── workflow-engine.ts  # 工作流引擎
-└── types/            # TypeScript 类型定义
+├── app/
+│   ├── page.tsx                 # 主页（工作流选择与执行）
+│   ├── layout.tsx
+│   ├── globals.css
+│   └── api/
+│       ├── llm/route.ts         # LLM 流式调用接口
+│       └── validate/route.ts    # 配置验证接口
+├── components/
+│   ├── WorkflowRunner.tsx       # 工作流对话主界面
+│   ├── WorkflowSelector.tsx     # 工作流选择页
+│   ├── ArtifactPanel.tsx        # 产出物面板
+│   ├── LLMConfigForm.tsx        # LLM 配置表单
+│   └── ThemeToggle.tsx          # 主题切换
+├── lib/
+│   ├── workflow-engine.ts       # 工作流引擎（步骤管理、Prompt 生成）
+│   ├── workflows.ts             # 工作流定义 + Agent 系统提示词
+│   ├── store.ts                 # Zustand 全局状态
+│   ├── llm.ts                   # LLM 服务层（OpenAI / Anthropic 兼容）
+│   └── default-config.ts        # 平台默认配置
+└── types/index.ts               # TypeScript 类型定义
 ```
 
 ## 技术栈
 
-- **前端**: Next.js 16 + React 19 + TypeScript
-- **样式**: Tailwind CSS v4
-- **状态管理**: Zustand
-- **LLM 集成**: OpenAI / Anthropic SDK
-
-## 待办事项
-
-- [ ] 添加代码生成和导出功能
-- [ ] 支持更多工作流模板
-- [ ] 添加项目保存和恢复
-- [ ] 支持多语言
-- [ ] 添加用户认证
+- **框架**：Next.js 16 + React 19 + TypeScript 5.9
+- **样式**：Tailwind CSS v4 + @tailwindcss/typography
+- **状态管理**：Zustand 5（持久化 `llmConfig` 和 `currentProject`）
+- **Markdown**：react-markdown + remark-gfm
+- **图表**：Mermaid（懒加载）
 
 ## 参考资源
 

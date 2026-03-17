@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       : {
           ...llmConfig,
           apiKey: process.env.DEFAULT_API_KEY ?? '',
-          model: llmConfig.model || process.env.DEFAULT_MODEL || 'glm-4-flash',
+          model: llmConfig.model || process.env.DEFAULT_MODEL || 'glm-5',
         };
 
     if (!resolvedConfig.apiKey) {

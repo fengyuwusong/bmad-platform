@@ -5,6 +5,6 @@ import { LLMConfig } from '@/types';
 export const DEFAULT_LLM_CONFIG: LLMConfig = {
   provider: 'glm-coding',
   apiKey: '',
-  model: 'glm-4-flash',
+  model: 'glm-5',
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
 };

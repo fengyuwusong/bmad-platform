@@ -25,7 +25,7 @@ const providerOptions: ProviderInfo[] = [
   {
     value: 'glm-coding',
     label: 'GLM (智谱AI)',
-    defaultModel: 'glm-4-flash',
+    defaultModel: 'glm-5',
     baseURL: 'https://open.bigmodel.cn/api/paas/v4',
     apiType: 'openai',
     description: '智谱AI GLM 模型，兼容 OpenAI 格式',
@@ -213,7 +213,7 @@ export function LLMConfigForm({ onSaved }: { onSaved?: () => void }) {
           />
           {formData.provider === 'glm-coding' && (
             <p className="text-xs mt-1.5" style={{ color: 'var(--text-muted)' }}>
-              常用模型: glm-4-flash, glm-4-plus, glm-4-air
+              常用模型: glm-5, glm-4-plus, glm-4-air
             </p>
           )}
           {selectedProvider?.apiType === 'anthropic' && formData.provider !== 'glm-coding' && (
